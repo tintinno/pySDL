@@ -89,10 +89,10 @@ def create_initial_auth_header(hostname, username, password):
     Creates a structure like:
 
   <s:Header>
-	:GenericHeaders		via create_generic_headers()
+    :GenericHeaders     via create_generic_headers()
     <o:Security xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" s:mustUnderstand="1">
-	  :TimeStamp		via create_timestamp()
-	  :UsernameToken	via create_usernametoken()
+      :TimeStamp        via create_timestamp()
+      :UsernameToken    via create_usernametoken()
     </o:Security>
   </s:Header>
     """
