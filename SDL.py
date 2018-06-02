@@ -45,7 +45,8 @@ def authenticate(hostname, username, password):
 class SDL(object):
     def __init__(self, hostname):
         self.hostname = hostname
-    
+   
+	# ultimately, login() should complete the entire round of authentication  
     def login(self, username, password):
         r = authenticate(self.hostname, username, password)
         

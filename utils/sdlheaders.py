@@ -6,6 +6,8 @@ import uuid
 from lxml.etree import Element
 from lxml.etree import SubElement
 from utils import ns
+#import ns
+#from lxml import etree
 
 def create_generic_headers(action_s, to_s):
     """
@@ -61,7 +63,6 @@ def create_timestamp():
     expires.text = expires_s
     return timestamp
 
-# see authenticate() for this structure
 def create_usernametoken(username_s, password_s):
     """
     Creates a structure like:
@@ -83,6 +84,39 @@ def create_usernametoken(username_s, password_s):
 
     return usernametoken
 
+def create_initial_auth_header(hostname, username, password):
+    """
+    Creates a structure like:
+
+  <s:Header>
+	:GenericHeaders		via create_generic_headers()
+    <o:Security xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" s:mustUnderstand="1">
+	  :TimeStamp		via create_timestamp()
+	  :UsernameToken	via create_usernametoken()
+    </o:Security>
+  </s:Header>
+    """
+    action_s = 'http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/Issue'
+    to_s     = hostname + '/InfoShareSTS/issue/wstrust/mixed/username'
+
+    header = Element("{%s}Header" % ns.s, nsmap = { 's':ns.s })
+    action, messageid, replyto, to = create_generic_headers(action_s, to_s)
+    header.append(action)
+    header.append(messageid)
+    header.append(replyto)
+    header.append(to)
+	
+    security = SubElement(header, "{%s}Security" % ns.o, nsmap = {'o':ns.o})
+    security.attrib["{%s}mustUnderstand" % ns.s] = '1'
+    timestamp = create_timestamp()
+    usernametoken = create_usernametoken(username, password)
+    security.append(timestamp)
+    security.append(usernametoken)
+
+    header.append(security)
+
+    return header
+
 def create_security_header(encryptedData):
     """
     Creates a structure like:
@@ -101,3 +135,6 @@ def create_security_header(encryptedData):
 
     return security
 
+if __name__ == '__main__':
+	h = create_initial_auth_header('foo','bar','foobar')
+	print(etree.tostring(h, pretty_print=True).decode('utf-8'))
