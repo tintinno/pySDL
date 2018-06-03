@@ -42,3 +42,32 @@ def create_requestSecurityToken(binarySecret):
     keysize.text = '256'
 
     return reqSecToken
+
+def create_intial_auth_body(hostname):
+    """
+    Creates a structure like:
+
+  <s:Body>
+    <trust:RequestSecurityToken xmlns:trust="http://docs.oasis-open.org/ws-sx/ws-trust/200512">
+      <wsp:AppliesTo xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+        <wsa:EndpointReference xmlns:wsa="http://www.w3.org/2005/08/addressing">
+          <wsa:Address>https://ccms.example.com/InfoShareWS/Wcf/API25/Application.svc</wsa:Address>
+        </wsa:EndpointReference>
+      </wsp:AppliesTo>
+      <trust:KeyType>http://docs.oasis-open.org/ws-sx/ws-trust/200512/SymmetricKey</trust:KeyType>
+      <trust:RequestType>http://docs.oasis-open.org/ws-sx/ws-trust/200512/Issue</trust:RequestType>
+    </trust:RequestSecurityToken>
+  </s:Body>
+    """
+    body = Element("{%s}Body" % ns.s)
+    requestSecurityToken = SubElement(body, "{%s}RequestSecurityToken" % ns.trust)
+    appliesto = SubElement(requestSecurityToken, "{%s}AppliesTo" % ns.wsp)
+    endpoint  = SubElement(appliesto,"{%s}EndpointReference" % ns.wsa)
+    address   = SubElement(endpoint, "{%s}Address" % ns.wsa)
+    address.text = hostname + '/InfoShareWS/Wcf/API25/Application.svc'
+    keytype   = SubElement(requestSecurityToken, "{%s}KeyType" % ns.trust)
+    reqtype   = SubElement(requestSecurityToken, "{%s}RequestType" % ns.trust)
+    keytype.text = 'http://docs.oasis-open.org/ws-sx/ws-trust/200512/SymmetricKey'
+    reqtype.text = 'http://docs.oasis-open.org/ws-sx/ws-trust/200512/Issue'
+    return body
+
