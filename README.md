@@ -9,14 +9,15 @@ A complete Python client for SDL LiveContent run from Linux!
 
 ## Immediate Goal
 
-Authenticate to the Application.svc endpoint and run GetVersion().
+Authenticate to the Application.svc endpoint and run GetVersion(). 
 
-If you run `python3 login.py`, you'll see an encs.xml file that contains the EncryptedData of the response.
+Authentication requires a multi-message exchange, the first part of which is complete. Run `python3 login.py` and the EncryptedData of the response will be written to the file `encs.xml`.
 
 ## Use
 
-Authentication credentials are stored in a `.netrc` file. 
-[More info](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html).
+Authentication credentials are stored in a
+[.netrc](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html)
+file.
 
 The `account` value in the .netrc file is used as the hostname.
 
@@ -28,4 +29,4 @@ account https://ccms.example.com
 password superSecretPassword
 $
 ```
-Don't forget to run `chmod 600 ~/.netrc` after creating the file.
+Set file permissions with `chmod 600 ~/.netrc`.

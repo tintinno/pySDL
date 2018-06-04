@@ -5,7 +5,12 @@ from lxml.etree import Element
 from lxml.etree import SubElement
 from utils import ns
 
-def create_requestSecurityToken(binarySecret):
+def wrap_in_body(message):
+    body = Element("{%s}Body" % ns.s, nsmap = {'s':ns.s})
+    body.append(message)
+    return body
+
+def create_requestSecurityToken(binarySecret_s):
     """
     Creates a structure like:
 
@@ -38,6 +43,7 @@ def create_requestSecurityToken(binarySecret):
     binarySec   = SubElement(entropy, "{%s}BinarySecret" % ns.trust)
     binarySec.attrib["{%s}Id" % ns.u] = 'uuid-' + str(uuid.uuid4()) + '-1'
     binarySec.attrib["Type"] = binSecType_s
+    binarySec.text = binarySecret_s
     keysize     = SubElement(reqSecToken, "{%s}KeySize" % ns.trust)
     keysize.text = '256'
 
