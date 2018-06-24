@@ -5,7 +5,8 @@ This repository is only dreaming about a MVP. You've been warned.
 
 ## Long Term Goal
 
-A complete Python client for SDL LiveContent run from Linux!
+A complete Python client for SDL LiveContent using their WCF/SVC endpoints.
+(Their ASMX endpoints already work easily with zeep.)
 
 ## Immediate Goal
 
